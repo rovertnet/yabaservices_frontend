@@ -63,7 +63,7 @@ const ServiceDetailsPage: React.FC = () => {
       <div className="overflow-hidden rounded-2xl bg-white shadow-lg">
         <div className="h-64 w-full bg-gray-300 sm:h-80">
              <img 
-                src={`https://placehold.co/800x400?text=${encodeURIComponent(service.title)}`} 
+                src={service.imageUrl ? `http://localhost:3000/${service.imageUrl}` : `https://placehold.co/800x400?text=${encodeURIComponent(service.title)}`} 
                 alt={service.title}
                 className="h-full w-full object-cover"
              />

@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import type { Booking } from '../services/bookings';
 import { bookingsApi } from '../services/bookings';
 
 const BookingPage: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -118,7 +121,18 @@ const BookingPage: React.FC = () => {
                       Annuler
                     </button>
                   )}
+                  
+                  {/* Chat Button - Always visible for confirmed/pending bookings */}
+                  {(booking.status === 'CONFIRMED' || booking.status === 'PENDING') && (
+                    <button
+                      onClick={() => navigate(`/chat/${booking.id}`)}
+                      className="rounded bg-gray-600 px-3 py-1 text-sm font-bold text-white hover:bg-gray-700"
+                    >
+                      💬 Chat
+                    </button>
+                  )}
                 </div>
+
               </div>
             </div>
           ))}

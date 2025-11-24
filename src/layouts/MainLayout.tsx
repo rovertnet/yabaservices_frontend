@@ -11,7 +11,8 @@ import { Link, Outlet } from "react-router-dom";
 
 export default function MainLayout() {
   const [open, setOpen] = useState(false);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+
 
 
   return (
@@ -38,6 +39,11 @@ export default function MainLayout() {
             <Link to="/bookings" className="hover:text-primary">
               Mes Réservations
             </Link>
+            {user?.role === 'PROVIDER' && (
+              <Link to="/subscription" className="hover:text-primary">
+                Abonnement
+              </Link>
+            )}
 
             <Link to="/profile" className="hover:text-primary">
               Profil

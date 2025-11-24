@@ -3,14 +3,17 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
 import BookingPage from "../pages/BookingPage";
+import ChatPage from "../pages/ChatPage";
 import CreateBookingPage from "../pages/CreateBookingPage";
 import Dashboard from "../pages/Dashboard";
+
 
 import Home from "../pages/Home";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import ServiceDetailsPage from "../pages/ServiceDetailsPage";
 import ServicesPage from "../pages/ServicesPage";
+import SubscriptionPage from "../pages/SubscriptionPage";
 
 
 import CreateServicePage from "../pages/CreateServicePage";
@@ -28,10 +31,14 @@ export const router = createBrowserRouter([
       { path: "create-service", element: <CreateServicePage /> },
       { path: "booking/:id", element: <CreateBookingPage /> },
       { path: "bookings", element: <BookingPage /> },
+      { path: "chat/:bookingId", element: <ChatPage /> },
       { path: "dashboard", element: <Dashboard /> },
 
+
       { path: "profile", element: <ProfilePage /> },
+      { path: "subscription", element: <SubscriptionPage /> },
     ],
+
   },
   {
     path: "/login",

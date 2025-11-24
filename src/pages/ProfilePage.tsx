@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
+import { subscriptionsApi, type Subscription } from '../services/subscriptions';
+
 
 const ProfilePage: React.FC = () => {
   const { user, logout, login, token } = useAuth();
@@ -9,7 +11,9 @@ const ProfilePage: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState<any>(null);
+  const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [formData, setFormData] = useState({
+
     name: '',
     email: '',
     phone: '',
@@ -21,8 +25,21 @@ const ProfilePage: React.FC = () => {
   useEffect(() => {
     if (user) {
       fetchProfile();
+      if (user.role === 'PROVIDER') {
+        fetchSubscription();
+      }
     }
+
   }, [user]);
+
+  const fetchSubscription = async () => {
+    try {
+      const data = await subscriptionsApi.getMySubscription();
+      setSubscription(data);
+    } catch (err) {
+      console.error('Failed to fetch subscription', err);
+    }
+  };
 
   const fetchProfile = async () => {
     try {
@@ -41,6 +58,7 @@ const ProfilePage: React.FC = () => {
       setLoading(false);
     }
   };
+
 
   const handleLogout = () => {
     logout();
@@ -200,11 +218,41 @@ const ProfilePage: React.FC = () => {
               </div>
 
               {profileData?.role === 'PROVIDER' && (
-                <div className="border-b pb-2">
-                  <label className="block text-sm font-medium text-gray-500">Bio</label>
-                  <p className="mt-1 text-gray-900">{profileData?.bio || '-'}</p>
-                </div>
+                <>
+                  <div className="border-b pb-2">
+                    <label className="block text-sm font-medium text-gray-500">Bio</label>
+                    <p className="mt-1 text-gray-900">{profileData?.bio || '-'}</p>
+                  </div>
+                  
+                  <div className="border-b pb-2">
+                    <label className="block text-sm font-medium text-gray-500">Abonnement</label>
+                    <div className="mt-1 flex items-center justify-between">
+                      <div>
+                        {subscription ? (
+                          <span className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
+                            subscription.status === 'ACTIVE' && new Date(subscription.endDate) > new Date()
+                              ? 'bg-green-100 text-green-800' 
+                              : 'bg-red-100 text-red-800'
+                          }`}>
+                            {subscription.status === 'ACTIVE' && new Date(subscription.endDate) > new Date()
+                              ? 'ACTIF' 
+                              : subscription.status}
+                          </span>
+                        ) : (
+                          <span className="text-gray-500">Aucun abonnement</span>
+                        )}
+                      </div>
+                      <button 
+                        onClick={() => navigate('/subscription')}
+                        className="text-sm font-medium text-blue-600 hover:text-blue-500"
+                      >
+                        Gérer
+                      </button>
+                    </div>
+                  </div>
+                </>
               )}
+
 
               <div className="border-b pb-4">
                 <label className="block text-sm font-medium text-gray-500">Rôle</label>

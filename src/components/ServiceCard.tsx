@@ -15,10 +15,10 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
   return (
     <>
       <div className="overflow-hidden rounded-lg bg-white shadow-md transition-shadow hover:shadow-lg">
-        {/* Placeholder Image - In a real app, service would have an image URL */}
+        {/* Service Image */}
         <div className="h-48 w-full bg-gray-300 object-cover">
            <img 
-              src={`https://placehold.co/600x400?text=${encodeURIComponent(service.title)}`} 
+              src={service.imageUrl  ? `http://localhost:3000/${service.imageUrl}` : `https://placehold.co/600x400?text=${encodeURIComponent(service.title)}`} 
               alt={service.title}
               className="h-full w-full object-cover"
            />

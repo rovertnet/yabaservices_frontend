@@ -11,8 +11,11 @@ const CreateServicePage: React.FC = () => {
     price: '',
     categoryId: '',
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -30,6 +33,19 @@ const CreateServicePage: React.FC = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -42,14 +58,18 @@ const CreateServicePage: React.FC = () => {
     }
 
     try {
-      const payload = {
-        title: formData.title,
-        description: formData.description,
-        price: parseFloat(formData.price),
-        categoryId: parseInt(formData.categoryId),
-      };
-      console.log('Sending payload:', payload);
-      await servicesApi.createService(payload);
+      const formDataToSend = new FormData();
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('price', formData.price);
+      formDataToSend.append('categoryId', formData.categoryId);
+      
+      if (imageFile) {
+        formDataToSend.append('image', imageFile);
+      }
+
+      console.log('Sending form data');
+      await servicesApi.createService(formDataToSend);
       navigate('/services');
     } catch (err: any) {
       console.error('Creation error:', err);
@@ -58,6 +78,7 @@ const CreateServicePage: React.FC = () => {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="mx-auto max-w-2xl p-6">
@@ -124,6 +145,22 @@ const CreateServicePage: React.FC = () => {
             placeholder="0.00"
           />
         </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Image du service</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+          />
+          {imagePreview && (
+            <div className="mt-2">
+              <img src={imagePreview} alt="Preview" className="h-48 w-full object-cover rounded-md" />
+            </div>
+          )}
+        </div>
+
 
         <div className="flex justify-end space-x-3">
           <button

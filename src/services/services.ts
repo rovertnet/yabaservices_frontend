@@ -19,6 +19,8 @@ export interface Service {
     name: string;
     icon: string;
   };
+  imageUrl?: string;
+
 }
 
 export const servicesApi = {
@@ -32,10 +34,14 @@ export const servicesApi = {
     return response.data;
   },
 
-  createService: async (data: { title: string; description: string; price: number; categoryId: number }) => {
-    const response = await api.post<Service>('/services', data);
+  createService: async (data: FormData | { title: string; description: string; price: number; categoryId: number }) => {
+    const config = data instanceof FormData
+      ? { headers: { 'Content-Type': 'multipart/form-data' } }
+      : {};
+    const response = await api.post<Service>('/services', data, config);
     return response.data;
   },
+
   
   deleteService: async (id: number) => {
       const response = await api.delete(`/services/${id}`);
