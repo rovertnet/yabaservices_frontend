@@ -1,96 +1,116 @@
-//===============================
-// PAGE SERVICES AVEC CARTES ANIMÉES ET CTA
-//===============================
+import React, { useEffect, useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import ServiceCard from '../components/ServiceCard';
+import { useAuth } from '../context/AuthContext';
+import type { Service } from '../services/services';
+import { servicesApi } from '../services/services';
 
-// src/pages/ServicesPage.tsx
-import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+const ServicesPage: React.FC = () => {
+  const [services, setServices] = useState<Service[]>([]);
+  const [filteredServices, setFilteredServices] = useState<Service[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { user } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchTerm = searchParams.get('search') || '';
+  const categoryFilter = searchParams.get('category') || '';
 
-const servicesData = [
-  {
-    id: 1,
-    title: "Coiffure",
-    description: "Coiffeurs professionnels à Kinshasa",
-    icon: "💇‍♂️",
-  },
-  {
-    id: 2,
-    title: "Mécanique",
-    description: "Réparation auto rapide et fiable",
-    icon: "🛠️",
-  },
-  {
-    id: 3,
-    title: "Cours particuliers",
-    description: "Professeurs qualifiés pour tous niveaux",
-    icon: "📚",
-  },
-  {
-    id: 4,
-    title: "Beauté & Spa",
-    description: "Soins esthétiques et bien-être",
-    icon: "💅",
-  },
-  {
-    id: 5,
-    title: "Livraison à domicile",
-    description: "Services de livraison rapides et sûrs",
-    icon: "📦",
-  },
-  {
-    id: 6,
-    title: "Événementiel",
-    description: "Organisation de fêtes et événements",
-    icon: "🎉",
-  },
-];
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const data = await servicesApi.getAllServices();
+        setServices(data);
+        setFilteredServices(data);
+      } catch (error) {
+        console.error('Failed to fetch services', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-export default function ServicesPage() {
+    fetchServices();
+  }, []);
+
+  useEffect(() => {
+    let result = services;
+
+    if (searchTerm) {
+      result = result.filter(s => 
+        s.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        s.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (categoryFilter) {
+        // Assuming we filter by category name for now, or we could map IDs
+        // For this demo, let's just match loosely if category object exists
+        result = result.filter(s => s.category?.name === categoryFilter);
+    }
+
+    setFilteredServices(result);
+  }, [searchTerm, categoryFilter, services]);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchParams(prev => {
+        prev.set('search', e.target.value);
+        return prev;
+    });
+  };
+
   return (
-    <div className="w-full px-6 py-12 max-w-6xl mx-auto">
-      <h1 className="text-3xl md:text-4xl font-bold text-center mb-12">
-        Nos Services Populaires
-      </h1>
-
-      <div className="grid md:grid-cols-3 gap-8">
-        {servicesData.map((service, index) => (
-          <motion.div
-            key={service.id}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="p-6 rounded-2xl shadow-md bg-white flex flex-col items-center text-center hover:scale-105 transition-transform"
-          >
-            <div className="text-4xl mb-4">{service.icon}</div>
-            <h3 className="text-xl font-semibold mb-2">{service.title}</h3>
-            <p className="text-gray-600">{service.description}</p>
+    <div>
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-3xl font-bold text-gray-900">Tous les Services</h1>
+          {user?.role === 'PROVIDER' && (
             <Link
-              to={`/service/${service.id}`}
-              className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all"
-            >
-              Voir Détails
+            to="/create-service"
+            className="rounded bg-blue-600 px-4 py-2 font-bold text-white hover:bg-blue-700"
+          >
+              Ajouter un service
             </Link>
-          </motion.div>
-        ))}
+          )}
+        </div>
+        
+        {/* Search Bar */}
+        <div className="relative max-w-md">
+            <input
+                type="text"
+                placeholder="Rechercher un service..."
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 pl-10 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                value={searchTerm}
+                onChange={handleSearchChange}
+            />
+            <div className="absolute left-3 top-3.5 text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </div>
+        </div>
       </div>
 
-      {/* CTA Section */}
-      <section className="mt-16 py-12 bg-blue-600 text-white rounded-2xl text-center">
-        <h2 className="text-2xl md:text-3xl font-bold mb-4">
-          Vous souhaitez proposer un service ?
-        </h2>
-        <p className="mb-6">
-          Rejoignez notre plateforme et atteignez de nouveaux clients
-          facilement.
-        </p>
-        <Link
-          to="/register"
-          className="px-6 py-3 rounded-xl bg-white text-blue-600 font-semibold hover:bg-gray-100 transition-all"
-        >
-          Devenir Prestataire
-        </Link>
-      </section>
+      {isLoading ? (
+        <div className="flex h-64 items-center justify-center">
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+        </div>
+      ) : filteredServices.length > 0 ? (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredServices.map((service) => (
+            <ServiceCard key={service.id} service={service} />
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-lg bg-gray-50 py-12 text-center">
+            <p className="text-lg text-gray-600">Aucun service trouvé.</p>
+            <button 
+                onClick={() => setSearchParams({})}
+                className="mt-4 font-semibold text-blue-600 hover:text-blue-800"
+            >
+                Effacer les filtres
+            </button>
+        </div>
+      )}
     </div>
   );
-}
+};
+
+export default ServicesPage;

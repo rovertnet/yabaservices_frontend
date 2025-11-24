@@ -1,117 +1,131 @@
-//===============================
-// PAGE DE RÉSERVATION AVEC REACT-HOOK-FORM + ZOD + CONFIRMATION ANIMÉE
-//===============================
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import type { Booking } from '../services/bookings';
+import { bookingsApi } from '../services/bookings';
 
-// src/pages/BookingPage.tsx
-import { useParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { motion } from "framer-motion";
-import { useState } from "react";
+const BookingPage: React.FC = () => {
+  const { user } = useAuth();
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [loading, setLoading] = useState(true);
 
-//--------------------------
-// Schéma Zod
-//--------------------------
-const bookingSchema = z.object({
-  name: z.string().min(2, "Nom trop court"),
-  email: z.string().email("Email invalide"),
-  date: z.string().min(1, "Date requise"),
-  time: z.string().min(1, "Heure requise"),
-});
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const data = await bookingsApi.getAllBookings();
+        setBookings(data);
+      } catch (error) {
+        console.error('Failed to fetch bookings', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-type BookingFormData = z.infer<typeof bookingSchema>;
+    fetchBookings();
+  }, []);
 
-export default function BookingPage() {
-  const { id } = useParams<{ id: string }>();
-  const [success, setSuccess] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<BookingFormData>({ resolver: zodResolver(bookingSchema) });
-
-  const onSubmit = (data: BookingFormData) => {
-    console.log("Réservation envoyée →", data);
-    setSuccess(true);
-
-    setTimeout(() => {
-      setSuccess(false);
-      reset();
-    }, 3000);
+  const handleStatusUpdate = async (id: number, status: Booking['status']) => {
+    try {
+      await bookingsApi.updateBookingStatus(id, status);
+      setBookings(bookings.map(b => b.id === id ? { ...b, status } : b));
+    } catch (error) {
+      console.error('Failed to update status', error);
+    }
   };
 
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'PENDING': return 'bg-yellow-100 text-yellow-800';
+      case 'CONFIRMED': return 'bg-green-100 text-green-800';
+      case 'COMPLETED': return 'bg-blue-100 text-blue-800';
+      case 'CANCELLED': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex h-64 items-center justify-center">
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+      </div>
+    );
+  }
+
   return (
-    <div className="relative">
-      {/* Carte de confirmation animée */}
-      {success && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0 }}
-          className="fixed top-8 left-1/2 -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg z-50"
-        >
-          Réservation confirmée ✔️
-        </motion.div>
+    <div className="mx-auto max-w-4xl p-6">
+      <h1 className="mb-6 text-2xl font-bold text-gray-900">Mes Réservations</h1>
+
+      {bookings.length === 0 ? (
+        <div className="rounded-lg bg-gray-50 p-8 text-center text-gray-600">
+          Aucune réservation trouvée.
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {bookings.map((booking) => (
+            <div key={booking.id} className="rounded-lg bg-white p-6 shadow-md">
+              <div className="flex flex-col justify-between space-y-4 sm:flex-row sm:items-center sm:space-y-0">
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">
+                    {booking.service?.title || 'Service supprimé'}
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    Date: {new Date(booking.date).toLocaleString()}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {user?.role === 'CLIENT' ? (
+                      <>Prestataire: {booking.provider?.name}</>
+                    ) : (
+                      <>Client: {booking.client?.name}</>
+                    )}
+                  </p>
+                </div>
+                
+                <div className="flex items-center space-x-4">
+                  <span className={`rounded-full px-3 py-1 text-xs font-bold ${getStatusColor(booking.status)}`}>
+                    {booking.status}
+                  </span>
+
+                  {user?.role === 'PROVIDER' && booking.status === 'PENDING' && (
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => handleStatusUpdate(booking.id, 'CONFIRMED')}
+                        className="rounded bg-green-500 px-3 py-1 text-sm font-bold text-white hover:bg-green-600"
+                      >
+                        Confirmer
+                      </button>
+                      <button
+                        onClick={() => handleStatusUpdate(booking.id, 'CANCELLED')}
+                        className="rounded bg-red-500 px-3 py-1 text-sm font-bold text-white hover:bg-red-600"
+                      >
+                        Refuser
+                      </button>
+                    </div>
+                  )}
+
+                  {user?.role === 'PROVIDER' && booking.status === 'CONFIRMED' && (
+                    <button
+                      onClick={() => handleStatusUpdate(booking.id, 'COMPLETED')}
+                      className="rounded bg-blue-500 px-3 py-1 text-sm font-bold text-white hover:bg-blue-600"
+                    >
+                      Terminer
+                    </button>
+                  )}
+
+                  {user?.role === 'CLIENT' && booking.status === 'PENDING' && (
+                    <button
+                      onClick={() => handleStatusUpdate(booking.id, 'CANCELLED')}
+                      className="rounded bg-red-500 px-3 py-1 text-sm font-bold text-white hover:bg-red-600"
+                    >
+                      Annuler
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="max-w-lg mx-auto mt-12 bg-white p-8 rounded-2xl shadow-lg"
-      >
-        <h1 className="text-2xl font-bold mb-6">Réserver le service #{id}</h1>
-
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-          <input
-            type="text"
-            placeholder="Votre nom"
-            {...register("name")}
-            className="px-4 py-2 border rounded-lg"
-          />
-          {errors.name && (
-            <span className="text-red-500 text-sm">{errors.name.message}</span>
-          )}
-
-          <input
-            type="email"
-            placeholder="Votre email"
-            {...register("email")}
-            className="px-4 py-2 border rounded-lg"
-          />
-          {errors.email && (
-            <span className="text-red-500 text-sm">{errors.email.message}</span>
-          )}
-
-          <input
-            type="date"
-            {...register("date")}
-            className="px-4 py-2 border rounded-lg"
-          />
-          {errors.date && (
-            <span className="text-red-500 text-sm">{errors.date.message}</span>
-          )}
-
-          <input
-            type="time"
-            {...register("time")}
-            className="px-4 py-2 border rounded-lg"
-          />
-          {errors.time && (
-            <span className="text-red-500 text-sm">{errors.time.message}</span>
-          )}
-
-          <button
-            type="submit"
-            className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all"
-          >
-            Confirmer la réservation
-          </button>
-        </form>
-      </motion.div>
     </div>
   );
-}
+};
+
+export default BookingPage;

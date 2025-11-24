@@ -1,12 +1,18 @@
 //========================================
 // src/layouts/MainLayout.tsx — Version améliorée
 //========================================
-import { Outlet, Link } from "react-router-dom";
-import { useState } from "react";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { RxHamburgerMenu } from "react-icons/rx";
+import NotificationDropdown from "../components/NotificationDropdown";
+import { useAuth } from "../context/AuthContext";
+
+import { Link, Outlet } from "react-router-dom";
 
 export default function MainLayout() {
   const [open, setOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
+
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -15,7 +21,7 @@ export default function MainLayout() {
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="text-2xl font-bold text-primary">
-            ServiceKinz
+            <img src="../../public/logokin.png" alt="" className="w-20" />
           </Link>
 
           {/* Menu Desktop */}
@@ -26,20 +32,26 @@ export default function MainLayout() {
             <Link to="/services" className="hover:text-primary">
               Services
             </Link>
-            <Link to="/search" className="hover:text-primary">
+            <Link to="/services" className="hover:text-primary">
               Rechercher
             </Link>
+            <Link to="/bookings" className="hover:text-primary">
+              Mes Réservations
+            </Link>
+
             <Link to="/profile" className="hover:text-primary">
               Profil
             </Link>
+            {isAuthenticated && <NotificationDropdown />}
           </div>
+
 
           {/* Bouton Mobile */}
           <button
             className="md:hidden text-gray-800"
             onClick={() => setOpen(!open)}
           >
-            ☰
+            <RxHamburgerMenu size={24} />
           </button>
         </div>
 
@@ -54,9 +66,16 @@ export default function MainLayout() {
             <Link to="/" className="block" onClick={() => setOpen(false)}>
               Accueil
             </Link>
-            <Link to="/search" className="block" onClick={() => setOpen(false)}>
+            <Link to="/services" className="block" onClick={() => setOpen(false)}>
+              Services
+            </Link>
+            <Link to="/services" className="block" onClick={() => setOpen(false)}>
               Rechercher
             </Link>
+            <Link to="/bookings" className="block" onClick={() => setOpen(false)}>
+              Mes Réservations
+            </Link>
+
             <Link
               to="/profile"
               className="block"
@@ -75,7 +94,7 @@ export default function MainLayout() {
 
       {/* FOOTER */}
       <footer className="bg-white border-t mt-6 py-4 text-center text-sm text-gray-600">
-        © {new Date().getFullYear()} ServiceKinz — Tous droits réservés.
+        © {new Date().getFullYear()} RovertNet — Tous droits réservés.
       </footer>
     </div>
   );
