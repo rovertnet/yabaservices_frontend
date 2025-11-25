@@ -4,6 +4,7 @@ import type { Booking } from '../services/bookings';
 import { bookingsApi } from '../services/bookings';
 import type { Service } from '../services/services';
 import { servicesApi } from '../services/services';
+import ServiceCard from './ServiceCard';
 
 const ProviderDashboard: React.FC = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -66,42 +67,13 @@ const ProviderDashboard: React.FC = () => {
             </Link>
           </div>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {services.map((service) => (
-              <div key={service.id} className="overflow-hidden rounded-lg border bg-white shadow transition hover:shadow-md">
-                {service.imageUrl && (
-                  <img
-                    src={`http://localhost:3000/${service.imageUrl}`}
-                    alt={service.title}
-                    className="h-48 w-full object-cover"
-                  />
-                )}
-                <div className="p-4">
-                  <h4 className="mb-2 text-lg font-bold text-gray-900">{service.title}</h4>
-                  <p className="mb-3 line-clamp-2 text-sm text-gray-600">{service.description}</p>
-                  <p className="mb-4 text-xl font-bold text-blue-600">{service.price} FC</p>
-                  <div className="flex gap-2">
-                    <Link
-                      to={`/services/${service.id}`}
-                      className="flex-1 rounded bg-gray-600 px-3 py-2 text-center text-sm font-bold text-white hover:bg-gray-700"
-                    >
-                      Voir
-                    </Link>
-                    <button
-                      onClick={() => {
-                        if (confirm('Êtes-vous sûr de vouloir supprimer ce service ?')) {
-                          servicesApi.deleteService(service.id).then(() => {
-                            setServices(services.filter(s => s.id !== service.id));
-                          });
-                        }
-                      }}
-                      className="flex-1 rounded bg-red-600 px-3 py-2 text-sm font-bold text-white hover:bg-red-700"
-                    >
-                      Supprimer
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <ServiceCard 
+                key={service.id} 
+                service={service}
+                onDelete={(serviceId: number) => setServices(services.filter(s => s.id !== serviceId))}
+              />
             ))}
           </div>
         )}

@@ -8,7 +8,7 @@ const ServiceDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [service, setService] = useState<Service | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,6 +35,25 @@ const ServiceDetailsPage: React.FC = () => {
     navigate(`/booking/${id}`);
   };
 
+  const handleEdit = () => {
+    navigate(`/edit-service/${id}`);
+  };
+
+  const handleDelete = async () => {
+    if (!window.confirm('Êtes-vous sûr de vouloir supprimer ce service ?')) {
+      return;
+    }
+    
+    try {
+      await servicesApi.deleteService(+id!);
+      alert('Service supprimé avec succès');
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Failed to delete service', error);
+      alert('Échec de la suppression du service');
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -53,6 +72,10 @@ const ServiceDetailsPage: React.FC = () => {
       </div>
     );
   }
+
+  // Check if the current user is the owner of this service
+  const isOwnService = user?.id === service.provider?.id;
+  const isProvider = user?.role === 'PROVIDER';
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -82,7 +105,7 @@ const ServiceDetailsPage: React.FC = () => {
                     </div>
                 </div>
                 <div className="text-right">
-                    <p className="text-3xl font-bold text-blue-600">${service.price}</p>
+                    <p className="text-3xl font-bold text-blue-600">{service.price} FC</p>
                     <p className="text-sm text-gray-500">par session</p>
                 </div>
             </div>
@@ -100,12 +123,34 @@ const ServiceDetailsPage: React.FC = () => {
                         Publié le {new Date(service.createdAt).toLocaleDateString()}
                     </p>
                 </div>
-                <button
-                    onClick={handleBookNow}
-                    className="rounded-lg bg-blue-600 px-8 py-4 text-lg font-bold text-white shadow-lg transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
-                >
-                    Réserver ce service
-                </button>
+                
+                {/* Show booking button only for clients or unauthenticated users viewing other providers' services */}
+                {(!isProvider || !isOwnService) && (
+                  <button
+                      onClick={handleBookNow}
+                      className="rounded-lg bg-blue-600 px-8 py-4 text-lg font-bold text-white shadow-lg transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300"
+                  >
+                      Réserver ce service
+                  </button>
+                )}
+                
+                {/* Show edit/delete buttons for providers viewing their own services */}
+                {isProvider && isOwnService && (
+                  <div className="flex gap-3">
+                    <button
+                        onClick={handleEdit}
+                        className="flex-1 rounded-lg bg-green-600 px-6 py-4 text-lg font-bold text-white shadow-lg transition hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300"
+                    >
+                        Modifier
+                    </button>
+                    <button
+                        onClick={handleDelete}
+                        className="flex-1 rounded-lg bg-red-600 px-6 py-4 text-lg font-bold text-white shadow-lg transition hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300"
+                    >
+                        Supprimer
+                    </button>
+                  </div>
+                )}
             </div>
         </div>
       </div>
@@ -114,3 +159,4 @@ const ServiceDetailsPage: React.FC = () => {
 };
 
 export default ServiceDetailsPage;
+
