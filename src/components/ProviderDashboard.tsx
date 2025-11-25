@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import type { Booking } from '../services/bookings';
 import { bookingsApi } from '../services/bookings';
+import type { Service } from '../services/services';
+import { servicesApi } from '../services/services';
 
 const ProviderDashboard: React.FC = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const bookingsData = await bookingsApi.getMyBookings();
+        const servicesData = await servicesApi.getMyServices();
         setBookings(bookingsData);
+        setServices(servicesData);
       } catch (error) {
         console.error('Failed to fetch dashboard data', error);
       } finally {
@@ -21,10 +27,10 @@ const ProviderDashboard: React.FC = () => {
     fetchData();
   }, []);
 
-  const handleStatusUpdate = async (id: number, status: string) => {
+  const handleStatusUpdate = async (id: number, status: Booking['status']) => {
     try {
       await bookingsApi.updateBookingStatus(id, status);
-      setBookings(prev => prev.map(b => b.id === id ? { ...b, status: status as any } : b));
+      setBookings(prev => prev.map(b => b.id === id ? { ...b, status } : b));
     } catch (error) {
       console.error('Failed to update status', error);
       alert('Failed to update status');
@@ -37,6 +43,71 @@ const ProviderDashboard: React.FC = () => {
     <div>
       <h2 className="mb-6 text-2xl font-bold text-gray-800">Tableau de Bord Prestataire</h2>
       
+      {/* Section Mes Services */}
+      <div className="mb-8">
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="text-xl font-semibold text-gray-700">Mes Services</h3>
+          <Link
+            to="/create-service"
+            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-bold text-white transition hover:bg-blue-700"
+          >
+            + Créer un Service
+          </Link>
+        </div>
+        
+        {services.length === 0 ? (
+          <div className="rounded-lg bg-gray-50 p-6 text-center">
+            <p className="mb-3 text-gray-600">Vous n'avez pas encore créé de service.</p>
+            <Link
+              to="/create-service"
+              className="font-semibold text-blue-600 hover:underline"
+            >
+              Créer votre premier service
+            </Link>
+          </div>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {services.map((service) => (
+              <div key={service.id} className="overflow-hidden rounded-lg border bg-white shadow transition hover:shadow-md">
+                {service.imageUrl && (
+                  <img
+                    src={`http://localhost:3000/${service.imageUrl}`}
+                    alt={service.title}
+                    className="h-48 w-full object-cover"
+                  />
+                )}
+                <div className="p-4">
+                  <h4 className="mb-2 text-lg font-bold text-gray-900">{service.title}</h4>
+                  <p className="mb-3 line-clamp-2 text-sm text-gray-600">{service.description}</p>
+                  <p className="mb-4 text-xl font-bold text-blue-600">{service.price} FC</p>
+                  <div className="flex gap-2">
+                    <Link
+                      to={`/services/${service.id}`}
+                      className="flex-1 rounded bg-gray-600 px-3 py-2 text-center text-sm font-bold text-white hover:bg-gray-700"
+                    >
+                      Voir
+                    </Link>
+                    <button
+                      onClick={() => {
+                        if (confirm('Êtes-vous sûr de vouloir supprimer ce service ?')) {
+                          servicesApi.deleteService(service.id).then(() => {
+                            setServices(services.filter(s => s.id !== service.id));
+                          });
+                        }
+                      }}
+                      className="flex-1 rounded bg-red-600 px-3 py-2 text-sm font-bold text-white hover:bg-red-700"
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Section Réservations */}
       <div className="mb-8">
         <h3 className="mb-4 text-xl font-semibold text-gray-700">Réservations Reçues</h3>
         {bookings.length === 0 ? (

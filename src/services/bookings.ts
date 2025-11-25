@@ -42,5 +42,10 @@ export const bookingsApi = {
   updateBookingStatus: async (id: number, status: Booking['status']) => {
     const response = await api.patch<Booking>(`/bookings/${id}/status`, { status });
     return response.data;
+  },
+
+  getMyBookings: async () => {
+    const response = await api.get<Booking[]>('/bookings');
+    return response.data;
   }
 };

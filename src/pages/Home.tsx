@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ServiceCard from '../components/ServiceCard';
+import { useAuth } from '../context/AuthContext';
 import type { Service } from '../services/services';
 import { servicesApi } from '../services/services';
 
 const Home: React.FC = () => {
+  const { user } = useAuth();
   const [featuredServices, setFeaturedServices] = useState<Service[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -42,12 +44,28 @@ const Home: React.FC = () => {
           >
             Voir les Services
           </Link>
-          <Link
-            to="/register"
-            className="rounded-full border-2 border-white bg-transparent px-8 py-3 text-base font-bold text-white transition hover:bg-white/10"
-          >
-            Devenir Prestataire
-          </Link>
+          {!user ? (
+            <Link
+              to="/register"
+              className="rounded-full border-2 border-white bg-transparent px-8 py-3 text-base font-bold text-white transition hover:bg-white/10"
+            >
+              Devenir Prestataire
+            </Link>
+          ) : user.role === 'CLIENT' ? (
+            <Link
+              to="/dashboard"
+              className="rounded-full border-2 border-white bg-transparent px-8 py-3 text-base font-bold text-white transition hover:bg-white/10"
+            >
+              Mon Dashboard
+            </Link>
+          ) : (
+            <Link
+              to="/provider/services"
+              className="rounded-full border-2 border-white bg-transparent px-8 py-3 text-base font-bold text-white transition hover:bg-white/10"
+            >
+              Mes Services
+            </Link>
+          )}
         </div>
       </div>
 

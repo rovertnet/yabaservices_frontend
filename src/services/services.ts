@@ -48,6 +48,11 @@ export const servicesApi = {
       return response.data;
   },
 
+  getMyServices: async () => {
+    const response = await api.get<Service[]>('/services/my-services');
+    return response.data;
+  },
+
   getCategories: async () => {
     const response = await api.get<{ id: number; name: string; icon: string }[]>('/categories');
     return response.data;
