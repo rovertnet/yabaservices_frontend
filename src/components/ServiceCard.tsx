@@ -56,7 +56,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onDelete }) => {
               <span className="text-xs font-semibold uppercase tracking-wider text-blue-600">
                   {service.category?.name || 'Service'}
               </span>
-              <span className="text-lg font-bold text-gray-900">{service.price} FC</span>
+              <span className="text-lg font-bold text-gray-900">${service.price}</span>
           </div>
           <h3 className="mb-2 text-xl font-bold text-gray-800">{service.title}</h3>
           <p className="mb-4 text-sm text-gray-600 line-clamp-2">{service.description}</p>

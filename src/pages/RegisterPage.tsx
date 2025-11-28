@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import api from '../services/api';
+import authService from '../services/auth';
 
 const RegisterPage: React.FC = () => {
   const [name, setName] = useState('');
@@ -9,17 +8,15 @@ const RegisterPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState<'CLIENT' | 'PROVIDER'>('CLIENT');
   const [error, setError] = useState('');
-  const { login } = useAuth();
+  // const { login } = useAuth(); // No longer needed here
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     try {
-      const response = await api.post('/auth/register', { name, email, password, role });
-      const { access_token, user } = response.data;
-      login(access_token, user);
-      navigate('/');
+      await authService.register({ name, email, password, role });
+      navigate('/verify-email', { state: { email } });
     } catch (err: any) {
       const message = err.response?.data?.message;
       if (Array.isArray(message)) {

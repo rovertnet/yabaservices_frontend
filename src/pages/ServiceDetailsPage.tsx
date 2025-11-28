@@ -105,7 +105,7 @@ const ServiceDetailsPage: React.FC = () => {
                     </div>
                 </div>
                 <div className="text-right">
-                    <p className="text-3xl font-bold text-blue-600">{service.price} FC</p>
+                    <p className="text-3xl font-bold text-blue-600">${service.price}</p>
                     <p className="text-sm text-gray-500">par session</p>
                 </div>
             </div>

@@ -16,8 +16,12 @@ import ServicesPage from "../pages/ServicesPage";
 import SubscriptionPage from "../pages/SubscriptionPage";
 
 
+import AuthCallbackPage from "../pages/AuthCallbackPage";
 import CreateServicePage from "../pages/CreateServicePage";
+import ForgotPasswordPage from "../pages/ForgotPasswordPage";
 import ProfilePage from "../pages/ProfilePage";
+import ResetPasswordPage from "../pages/ResetPasswordPage";
+import VerifyEmailPage from "../pages/VerifyEmailPage";
 
 export const router = createBrowserRouter([
   {
@@ -47,5 +51,21 @@ export const router = createBrowserRouter([
   {
     path: "/register",
     element: <RegisterPage />,
+  },
+  {
+    path: "/verify-email",
+    element: <VerifyEmailPage />,
+  },
+  {
+    path: "/auth/callback",
+    element: <AuthCallbackPage />,
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPasswordPage />,
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPasswordPage />,
   },
 ]);
