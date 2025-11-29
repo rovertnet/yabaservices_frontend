@@ -4,16 +4,21 @@ import { useAuth } from '../context/AuthContext';
 import type { Service } from '../services/services';
 import { servicesApi } from '../services/services';
 import BookingModal from './BookingModal';
+import StarRating from './StarRating';
+
+import MapModal from './MapModal';
 
 interface ServiceCardProps {
   service: Service;
   onDelete?: (serviceId: number) => void;
+  clientLocation?: { lat: number; lng: number } | null;
 }
 
-const ServiceCard: React.FC<ServiceCardProps> = ({ service, onDelete }) => {
+const ServiceCard: React.FC<ServiceCardProps> = ({ service, onDelete, clientLocation }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMapOpen, setIsMapOpen] = useState(false);
 
   // Check if the current user is the owner of this service
   const isOwnService = user?.id === service.provider?.id;
@@ -58,6 +63,9 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onDelete }) => {
               </span>
               <span className="text-lg font-bold text-gray-900">${service.price}</span>
           </div>
+          <div className="mb-2">
+            <StarRating bookingCount={service._count?.bookings || 0} size="sm" />
+          </div>
           <h3 className="mb-2 text-xl font-bold text-gray-800">{service.title}</h3>
           <p className="mb-4 text-sm text-gray-600 line-clamp-2">{service.description}</p>
           
@@ -68,6 +76,19 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onDelete }) => {
                   </div>
                   <span className="ml-2 text-sm text-gray-600">{service.provider?.name || 'Provider'}</span>
               </div>
+              {service.distance !== undefined && service.distance !== null && (
+                <div 
+                  className="flex items-center text-xs text-blue-600 cursor-pointer hover:underline hover:text-blue-800 transition-colors"
+                  onClick={() => setIsMapOpen(true)}
+                  title="Voir sur la carte"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  à {service.distance} km
+                </div>
+              )}
               <div className="flex space-x-2">
                 <Link
                   to={`/services/${service.id}`}
@@ -114,6 +135,16 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onDelete }) => {
         serviceId={service.id}
         serviceTitle={service.title}
       />
+
+      {service.provider?.latitude && service.provider?.longitude && (
+        <MapModal
+          isOpen={isMapOpen}
+          onClose={() => setIsMapOpen(false)}
+          providerLocation={{ lat: service.provider.latitude!, lng: service.provider.longitude! }}
+          providerName={service.provider.name}
+          clientLocation={clientLocation}
+        />
+      )}
     </>
   );
 };

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import StarRating from '../components/StarRating';
 import { useAuth } from '../context/AuthContext';
 import type { Service } from '../services/services';
 import { servicesApi } from '../services/services';
+
 
 const ServiceDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -102,6 +104,9 @@ const ServiceDetailsPage: React.FC = () => {
                     <div className="mt-2 flex items-center text-gray-600">
                         <span className="mr-2">Par</span>
                         <span className="font-semibold text-gray-800">{service.provider?.name || 'Prestataire Inconnu'}</span>
+                    </div>
+                    <div className="mt-2">
+                        <StarRating bookingCount={service._count?.bookings || 0} showCount={true} size="lg" />
                     </div>
                 </div>
                 <div className="text-right">

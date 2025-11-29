@@ -13,6 +13,8 @@ export interface Service {
     id: number;
     name: string;
     email: string;
+    latitude?: number;
+    longitude?: number;
   };
   category?: {
     id: number;
@@ -20,12 +22,19 @@ export interface Service {
     icon: string;
   };
   imageUrl?: string;
-
+  _count?: {
+    bookings: number;
+  };
+  distance?: number;
 }
 
 export const servicesApi = {
-  getAllServices: async () => {
-    const response = await api.get<Service[]>('/services');
+  getAllServices: async (lat?: number, lng?: number): Promise<Service[]> => {
+    const params = new URLSearchParams();
+    if (lat) params.append('lat', lat.toString());
+    if (lng) params.append('lng', lng.toString());
+    
+    const response = await api.get<Service[]>(`/services?${params.toString()}`);
     return response.data;
   },
 

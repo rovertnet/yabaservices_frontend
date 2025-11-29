@@ -9,11 +9,30 @@ const Home: React.FC = () => {
   const { user } = useAuth();
   const [featuredServices, setFeaturedServices] = useState<Service[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
 
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const data = await servicesApi.getAllServices();
+        let lat: number | undefined;
+        let lng: number | undefined;
+
+        // Request geolocation
+        if (navigator.geolocation) {
+          try {
+            const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+              navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 });
+            });
+            lat = position.coords.latitude;
+            lng = position.coords.longitude;
+            setUserLocation({ lat, lng });
+            console.log('User location:', lat, lng);
+          } catch (geoError) {
+            console.log('Geolocation denied or failed:', geoError);
+          }
+        }
+
+        const data = await servicesApi.getAllServices(lat, lng);
         // Take first 3 as featured
         setFeaturedServices(data.slice(0, 3));
       } catch (error) {
@@ -88,7 +107,11 @@ const Home: React.FC = () => {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {featuredServices.map((service) => (
-              <ServiceCard key={service.id} service={service} />
+              <ServiceCard 
+                key={service.id} 
+                service={service} 
+                clientLocation={userLocation}
+              />
             ))}
           </div>
         )}
