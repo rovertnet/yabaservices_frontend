@@ -51,6 +51,14 @@ export const servicesApi = {
     return response.data;
   },
 
+  updateService: async (id: number, data: FormData | { title: string; description: string; price: number; categoryId: number }) => {
+    const config = data instanceof FormData
+      ? { headers: { 'Content-Type': 'multipart/form-data' } }
+      : {};
+    const response = await api.patch<Service>(`/services/${id}`, data, config);
+    return response.data;
+  },
+
   
   deleteService: async (id: number) => {
       const response = await api.delete(`/services/${id}`);

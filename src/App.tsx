@@ -5,6 +5,7 @@ import BookingPage from './pages/BookingPage';
 import ChatPage from './pages/ChatPage';
 import CreateServicePage from './pages/CreateServicePage';
 import Dashboard from './pages/Dashboard';
+import EditServicePage from './pages/EditServicePage';
 import Home from './pages/Home';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
@@ -24,6 +25,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="services" element={<ServicesPage />} />
           <Route path="create-service" element={<CreateServicePage />} />
+          <Route path="edit-service/:id" element={<EditServicePage />} />
           <Route path="services/:id" element={<ServiceDetailsPage />} />
           <Route path="bookings" element={<BookingPage />} />
           <Route path="dashboard" element={<Dashboard />} />
