@@ -44,7 +44,6 @@ export const router = createBrowserRouter([
       { path: "subscription", element: <SubscriptionPage /> },
       { path: "edit-service/:id", element: <EditServicePage /> },
     ],
-
   },
   {
     path: "/login",
