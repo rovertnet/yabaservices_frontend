@@ -43,14 +43,16 @@ const AuthCallbackPage: React.FC = () => {
   }, [location, navigate, login]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="rounded-lg bg-white p-8 shadow-md">
-        <div className="flex flex-col items-center">
-          <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
-          <p className="text-gray-700">Authentification en cours...</p>
+    <>
+      <div className="flex min-h-screen items-center justify-center bg-gray-100">
+        <div className="rounded-lg bg-white p-8 shadow-md">
+          <div className="flex flex-col items-center">
+            <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+            <p className="text-gray-700">Authentification en cours...</p>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

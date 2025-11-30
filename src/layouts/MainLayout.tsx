@@ -33,9 +33,6 @@ export default function MainLayout() {
             <Link to="/services" className="hover:text-primary">
               Services
             </Link>
-            <Link to="/services" className="hover:text-primary">
-              Rechercher
-            </Link>
             <Link to="/bookings" className="hover:text-primary">
               Mes Réservations
             </Link>

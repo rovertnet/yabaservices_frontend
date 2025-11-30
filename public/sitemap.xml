@@ -1,0 +1,720 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>http://localhost:5173/</loc>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services</loc>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/bookings</loc>
+    <priority>0.8</priority>
+  </url>
+
+   <url>
+    <loc>http://localhost:5173/subscription</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/profile</loc>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/1</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/2</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/3</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/4</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/5</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/6</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/7</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/8</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/9</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/10</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/11</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/12</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/13</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/14</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/15</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/16</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/17</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/18</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/19</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/20</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/21</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/22</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/23</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/24</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/25</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/26</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/27</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/28</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/29</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/30</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/31</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/32</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/33</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/34</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/35</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/36</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/37</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/38</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/39</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/40</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/41</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/42</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/43</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/44</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/45</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/46</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/47</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/48</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/49</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/50</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/51</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/52</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/53</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/54</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/55</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/56</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/57</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/58</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/59</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/60</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/61</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/62</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/63</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/64</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/65</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/66</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/67</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/68</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/69</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/70</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/71</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/72</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/73</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/74</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/75</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/76</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/77</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/78</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/79</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/80</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/81</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/82</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/83</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/84</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/85</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/86</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/87</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/88</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/89</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/90</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/91</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/92</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/93</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/94</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/95</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/96</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/97</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/98</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/99</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/services/100</loc>
+    <priority>0.5</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/13</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/14</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/15</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/16</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/17</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/18</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/19</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/20</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/21</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/22</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/23</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/24</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/25</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/26</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/27</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/28</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/29</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/30</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/31</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/32</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/33</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/34</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/35</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/36</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/37</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/38</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/39</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/40</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/41</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/42</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/43</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/44</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/45</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/46</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/47</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/48</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/49</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <url>
+    <loc>http://localhost:5173/chat/50</loc>
+    <priority>0.4</priority>
+  </url>
+  
+
+</urlset>
