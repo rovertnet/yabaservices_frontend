@@ -9,6 +9,7 @@ const ServicesPage: React.FC = () => {
   const [services, setServices] = useState<Service[]>([]);
   const [filteredServices, setFilteredServices] = useState<Service[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const { user } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const searchTerm = searchParams.get('search') || '';
@@ -17,7 +18,25 @@ const ServicesPage: React.FC = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const data = await servicesApi.getAllServices();
+        let lat: number | undefined;
+        let lng: number | undefined;
+
+        // Request geolocation
+        if (navigator.geolocation) {
+          try {
+            const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+              navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 });
+            });
+            lat = position.coords.latitude;
+            lng = position.coords.longitude;
+            setUserLocation({ lat, lng });
+            console.log('User location:', lat, lng);
+          } catch (geoError) {
+            console.log('Geolocation denied or failed:', geoError);
+          }
+        }
+
+        const data = await servicesApi.getAllServices(lat, lng);
         setServices(data);
         setFilteredServices(data);
       } catch (error) {
@@ -95,7 +114,7 @@ const ServicesPage: React.FC = () => {
       ) : filteredServices.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filteredServices.map((service) => (
-            <ServiceCard key={service.id} service={service} />
+            <ServiceCard key={service.id} service={service} clientLocation={userLocation} />
           ))}
         </div>
       ) : (
