@@ -112,15 +112,9 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onDelete, clientLoca
                   <>
                     <button
                       onClick={handleEdit}
-                      className="rounded bg-green-600 px-3 py-2 text-sm font-bold text-white hover:bg-green-700"
+                      className="rounded bg-blue-600 px-3 py-2 text-sm font-bold text-white hover:bg-green-700"
                     >
                       Modifier
-                    </button>
-                    <button
-                      onClick={handleDelete}
-                      className="rounded bg-red-600 px-3 py-2 text-sm font-bold text-white hover:bg-red-700"
-                    >
-                      Supprimer
                     </button>
                   </>
                 )}

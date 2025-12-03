@@ -1,19 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import ServiceCard from '../components/ServiceCard';
 import { useAuth } from '../context/AuthContext';
 import type { Service } from '../services/services';
 import { servicesApi } from '../services/services';
 
+const SERVICES_PER_PAGE = 9;
+
 const ServicesPage: React.FC = () => {
   const [services, setServices] = useState<Service[]>([]);
   const [filteredServices, setFilteredServices] = useState<Service[]>([]);
+  const [displayedCount, setDisplayedCount] = useState(SERVICES_PER_PAGE);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const { user } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const searchTerm = searchParams.get('search') || '';
   const categoryFilter = searchParams.get('category') || '';
+  
+  // Ref for the loader element (intersection observer target)
+  const loaderRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -66,6 +73,8 @@ const ServicesPage: React.FC = () => {
     }
 
     setFilteredServices(result);
+    // Reset displayed count when filters change
+    setDisplayedCount(SERVICES_PER_PAGE);
   }, [searchTerm, categoryFilter, services]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,6 +83,48 @@ const ServicesPage: React.FC = () => {
         return prev;
     });
   };
+
+  const loadMore = useCallback(() => {
+    if (isLoadingMore) return;
+    
+    setIsLoadingMore(true);
+    // Simulate a small delay to show the loading indicator
+    setTimeout(() => {
+      setDisplayedCount(prev => prev + SERVICES_PER_PAGE);
+      setIsLoadingMore(false);
+    }, 500);
+  }, [isLoadingMore]);
+
+  const displayedServices = filteredServices.slice(0, displayedCount);
+  const hasMore = displayedCount < filteredServices.length;
+
+  // Infinite scroll with Intersection Observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const target = entries[0];
+        if (target.isIntersecting && !isLoadingMore && hasMore) {
+          loadMore();
+        }
+      },
+      {
+        root: null,
+        rootMargin: '100px', // Start loading 100px before reaching the bottom
+        threshold: 0.1,
+      }
+    );
+
+    const currentLoader = loaderRef.current;
+    if (currentLoader) {
+      observer.observe(currentLoader);
+    }
+
+    return () => {
+      if (currentLoader) {
+        observer.unobserve(currentLoader);
+      }
+    };
+  }, [loadMore, isLoadingMore, hasMore]); // Added hasMore dependency
 
   return (
     <div>
@@ -112,11 +163,30 @@ const ServicesPage: React.FC = () => {
           <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
         </div>
       ) : filteredServices.length > 0 ? (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredServices.map((service) => (
-            <ServiceCard key={service.id} service={service} clientLocation={userLocation} />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {displayedServices.map((service) => (
+              <ServiceCard key={service.id} service={service} clientLocation={userLocation} />
+            ))}
+          </div>
+          
+          {/* Infinite scroll loader - visible when loading more */}
+          {hasMore && (
+            <div 
+              ref={loaderRef}
+              className="mt-8 flex justify-center py-8"
+            >
+              {isLoadingMore ? (
+                <div className="flex flex-col items-center">
+                  <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+                  <p className="mt-3 text-sm font-medium text-gray-600">Chargement des services...</p>
+                </div>
+              ) : (
+                <div className="h-10"></div> // Invisible trigger zone
+              )}
+            </div>
+          )}
+        </>
       ) : (
         <div className="rounded-lg bg-gray-50 py-12 text-center">
             <p className="text-lg text-gray-600">Aucun service trouvé.</p>
