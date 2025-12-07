@@ -22,9 +22,16 @@ interface MapModalProps {
   providerLocation: { lat: number; lng: number };
   providerName: string;
   clientLocation?: { lat: number; lng: number } | null;
+  providerAddress?: {
+    city?: string;
+    commune?: string;
+    neighborhood?: string;
+    street?: string;
+    streetNumber?: string;
+  };
 }
 
-const MapModal: React.FC<MapModalProps> = ({ isOpen, onClose, providerLocation, providerName, clientLocation }) => {
+const MapModal: React.FC<MapModalProps> = ({ isOpen, onClose, providerLocation, providerName, clientLocation, providerAddress }) => {
   if (!isOpen) return null;
 
   // Calculate center between points if client location exists
@@ -69,6 +76,15 @@ const MapModal: React.FC<MapModalProps> = ({ isOpen, onClose, providerLocation, 
             <Marker position={[providerLocation.lat, providerLocation.lng]}>
               <Popup>
                 <div className="font-bold text-blue-600">Prestataire: {providerName}</div>
+                {providerAddress && (
+                  <div className="mt-1 text-sm text-gray-700">
+                    {providerAddress.streetNumber ? `${providerAddress.streetNumber}, ` : ''}
+                    {providerAddress.street ? `Av. ${providerAddress.street}` : ''}
+                    <br />
+                    {providerAddress.neighborhood ? `Q. ${providerAddress.neighborhood}, ` : ''}
+                    {providerAddress.commune ? `${providerAddress.commune}` : ''}
+                  </div>
+                )}
               </Popup>
             </Marker>
 

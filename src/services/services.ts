@@ -15,6 +15,11 @@ export interface Service {
     email: string;
     latitude?: number;
     longitude?: number;
+    city?: string;
+    commune?: string;
+    neighborhood?: string;
+    street?: string;
+    streetNumber?: string;
   };
   category?: {
     id: number;

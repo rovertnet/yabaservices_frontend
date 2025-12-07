@@ -1,8 +1,43 @@
+import L from 'leaflet';
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import 'leaflet/dist/leaflet.css';
 import React, { useEffect, useState } from 'react';
+import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from 'react-leaflet';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import { subscriptionsApi, type Subscription } from '../services/subscriptions';
+
+// Fix Leaflet marker icon
+let DefaultIcon = L.icon({
+    iconUrl: icon,
+    shadowUrl: iconShadow,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+});
+L.Marker.prototype.options.icon = DefaultIcon;
+
+const KINSHASA_CENTER: [number, number] = [-4.325, 15.3222]; // Approximate center of Kinshasa
+
+// Component to handle map clicks
+const LocationMarker: React.FC<{ 
+  position: { lat: number; lng: number } | null; 
+  setPosition: (pos: { lat: number; lng: number }) => void 
+}> = ({ position, setPosition }) => {
+  const map = useMapEvents({
+    click(e) {
+      setPosition(e.latlng);
+      map.flyTo(e.latlng, map.getZoom());
+    },
+  });
+
+  return position === null ? null : (
+    <Marker position={position}>
+      <Popup>Votre position sélectionnée</Popup>
+    </Marker>
+  );
+};
 
 
 const ProfilePage: React.FC = () => {
@@ -18,7 +53,13 @@ const ProfilePage: React.FC = () => {
     email: '',
     phone: '',
     city: '',
+    commune: '',
+    neighborhood: '',
+    street: '',
+    streetNumber: '',
     bio: '',
+    latitude: undefined as number | undefined,
+    longitude: undefined as number | undefined,
   });
   const [error, setError] = useState('');
 
@@ -50,7 +91,13 @@ const ProfilePage: React.FC = () => {
         email: response.data.email || '',
         phone: response.data.phone || '',
         city: response.data.city || '',
+        commune: response.data.commune || '',
+        neighborhood: response.data.neighborhood || '',
+        street: response.data.street || '',
+        streetNumber: response.data.streetNumber || '',
         bio: response.data.bio || '',
+        latitude: response.data.latitude,
+        longitude: response.data.longitude,
       });
     } catch (err) {
       console.error('Failed to fetch profile', err);
@@ -150,7 +197,7 @@ const ProfilePage: React.FC = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Ville / Commune</label>
+                <label className="block text-sm font-medium text-gray-700">Ville</label>
                 <input
                   type="text"
                   name="city"
@@ -158,6 +205,50 @@ const ProfilePage: React.FC = () => {
                   onChange={handleChange}
                   className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700">Commune</label>
+                  <input
+                    type="text"
+                    name="commune"
+                    value={formData.commune}
+                    onChange={handleChange}
+                    className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700">Quartier</label>
+                  <input
+                    type="text"
+                    name="neighborhood"
+                    value={formData.neighborhood}
+                    onChange={handleChange}
+                    className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-4 gap-4">
+                <div className="col-span-3 mb-4">
+                  <label className="block text-sm font-medium text-gray-700">Avenue</label>
+                  <input
+                    type="text"
+                    name="street"
+                    value={formData.street}
+                    onChange={handleChange}
+                    className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700">N°</label>
+                  <input
+                    type="text"
+                    name="streetNumber"
+                    value={formData.streetNumber}
+                    onChange={handleChange}
+                    className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                </div>
               </div>
               {user.role === 'PROVIDER' && (
                 <div className="mb-4">
@@ -169,6 +260,39 @@ const ProfilePage: React.FC = () => {
                     className="mt-1 block w-full rounded-md border border-gray-300 p-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     rows={3}
                   />
+                </div>
+              )}
+
+              {user.role === 'PROVIDER' && (
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Position sur la carte</label>
+                  <p className="text-xs text-gray-500 mb-2">
+                    Cliquez sur la carte pour définir votre position exacte. Cela aidera les clients à vous trouver.
+                  </p>
+                  <div className="h-64 w-full overflow-hidden rounded-lg border border-gray-300">
+                     <MapContainer 
+                      center={
+                        formData.latitude && formData.longitude 
+                          ? [formData.latitude, formData.longitude] 
+                          : KINSHASA_CENTER
+                      } 
+                      zoom={13} 
+                      style={{ height: '100%', width: '100%' }}
+                    >
+                      <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      />
+                      <LocationMarker 
+                        position={
+                          formData.latitude && formData.longitude 
+                            ? { lat: formData.latitude, lng: formData.longitude } 
+                            : null
+                        }
+                        setPosition={(pos) => setFormData({ ...formData, latitude: pos.lat, longitude: pos.lng })}
+                      />
+                    </MapContainer>
+                  </div>
                 </div>
               )}
               <div className="flex justify-end space-x-3">
@@ -214,6 +338,16 @@ const ProfilePage: React.FC = () => {
                 <div className="border-b pb-2">
                   <label className="block text-sm font-medium text-gray-500">Ville</label>
                   <p className="mt-1 text-lg font-semibold text-gray-900">{profileData?.city || '-'}</p>
+                </div>
+
+                <div className="border-b pb-2">
+                  <label className="block text-sm font-medium text-gray-500">Adresse Complète</label>
+                  <p className="mt-1 text-gray-900">
+                    {profileData?.streetNumber ? `${profileData.streetNumber}, ` : ''}
+                    {profileData?.street ? `Av. ${profileData.street}, ` : ''}
+                    {profileData?.neighborhood ? `Q. ${profileData.neighborhood}, ` : ''}
+                    {profileData?.commune ? `${profileData.commune}` : ''}
+                  </p>
                 </div>
               </div>
 

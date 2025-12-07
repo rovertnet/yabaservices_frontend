@@ -5,6 +5,13 @@ interface User {
   email: string;
   name: string;
   role: 'CLIENT' | 'PROVIDER' | 'ADMIN';
+  phone?: string;
+  city?: string;
+  commune?: string;
+  neighborhood?: string;
+  street?: string;
+  streetNumber?: string;
+  bio?: string;
 }
 
 interface AuthContextType {

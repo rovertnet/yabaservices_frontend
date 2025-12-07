@@ -142,6 +142,13 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onDelete, clientLoca
           onClose={() => setIsMapOpen(false)}
           providerLocation={{ lat: service.provider.latitude!, lng: service.provider.longitude! }}
           providerName={service.provider.name}
+          providerAddress={{
+            city: service.provider.city || undefined,
+            commune: service.provider.commune || undefined,
+            neighborhood: service.provider.neighborhood || undefined,
+            street: service.provider.street || undefined,
+            streetNumber: service.provider.streetNumber || undefined,
+          }}
           clientLocation={clientLocation}
         />
       )}
