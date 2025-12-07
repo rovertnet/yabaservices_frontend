@@ -70,11 +70,17 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onDelete, clientLoca
           <p className="mb-4 text-sm text-gray-600 line-clamp-2">{service.description}</p>
           
           <div className="flex items-center justify-between border-t pt-4">
-              <div className="flex items-center">
+              <div className="flex items-center hover:opacity-80 transition-opacity">
                   <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-600">
                       {service.provider?.name?.charAt(0) || 'P'}
                   </div>
-                  <span className="ml-2 text-sm text-gray-600">{service.provider?.name || 'Provider'}</span>
+                  <Link 
+                    to={`/providers/${service.provider?.id}`} 
+                    className="ml-2 text-sm text-gray-600 hover:text-blue-600 hover:underline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {service.provider?.name || 'Provider'}
+                  </Link>
               </div>
               {service.distance !== undefined && service.distance !== null && (
                 <div 

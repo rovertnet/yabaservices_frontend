@@ -23,6 +23,7 @@ import ProfilePage from "../pages/ProfilePage";
 import ResetPasswordPage from "../pages/ResetPasswordPage";
 import VerifyEmailPage from "../pages/VerifyEmailPage";
 import EditServicePage from "../pages/EditServicePage";
+import ProviderProfilePage from "../pages/ProviderProfilePage";
 
 export const router = createBrowserRouter([
   {
@@ -43,6 +44,7 @@ export const router = createBrowserRouter([
       { path: "profile", element: <ProfilePage /> },
       { path: "subscription", element: <SubscriptionPage /> },
       { path: "edit-service/:id", element: <EditServicePage /> },
+      { path: "providers/:id", element: <ProviderProfilePage /> },
     ],
   },
   {

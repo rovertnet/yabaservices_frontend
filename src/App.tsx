@@ -27,6 +27,7 @@ function App() {
           <Route path="create-service" element={<CreateServicePage />} />
           <Route path="edit-service/:id" element={<EditServicePage />} />
           <Route path="services/:id" element={<ServiceDetailsPage />} />
+          <Route path="providers/:id" element={<ProviderProfilePage />} />
           <Route path="bookings" element={<BookingPage />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="provider/services" element={<Dashboard />} />
