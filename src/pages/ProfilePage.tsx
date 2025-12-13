@@ -125,7 +125,7 @@ const ProfilePage: React.FC = () => {
       setIsEditing(false);
       // Update context if name or email changed
       if (token && user) {
-        login(token, { ...user, name: formData.name, email: formData.email });
+        login(token, { ...user, ...response.data });
       }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to update profile');
