@@ -18,7 +18,7 @@ const ServicesPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const searchTerm = searchParams.get('search') || '';
   const categoryFilter = searchParams.get('category') || '';
-  
+
   // Ref for the loader element (intersection observer target)
   const loaderRef = useRef<HTMLDivElement>(null);
 
@@ -30,17 +30,24 @@ const ServicesPage: React.FC = () => {
 
         // Request geolocation
         if (navigator.geolocation) {
+          console.log('Requesting geolocation...');
           try {
             const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-              navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 });
+              navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10000 });
             });
             lat = position.coords.latitude;
             lng = position.coords.longitude;
             setUserLocation({ lat, lng });
-            console.log('User location:', lat, lng);
-          } catch (geoError) {
-            console.log('Geolocation denied or failed:', geoError);
+            console.log('User location obtained:', lat, lng);
+          } catch (geoError: any) {
+            console.error('Geolocation denied or failed:', geoError.message, geoError.code);
+            // Log specific error codes
+            // 1: PERMISSION_DENIED
+            // 2: POSITION_UNAVAILABLE
+            // 3: TIMEOUT
           }
+        } else {
+          console.error('Geolocation not supported by this browser.');
         }
 
         const data = await servicesApi.getAllServices(lat, lng);
@@ -60,16 +67,16 @@ const ServicesPage: React.FC = () => {
     let result = services;
 
     if (searchTerm) {
-      result = result.filter(s => 
-        s.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      result = result.filter(s =>
+        s.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         s.description.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     if (categoryFilter) {
-        // Assuming we filter by category name for now, or we could map IDs
-        // For this demo, let's just match loosely if category object exists
-        result = result.filter(s => s.category?.name === categoryFilter);
+      // Assuming we filter by category name for now, or we could map IDs
+      // For this demo, let's just match loosely if category object exists
+      result = result.filter(s => s.category?.name === categoryFilter);
     }
 
     setFilteredServices(result);
@@ -79,14 +86,14 @@ const ServicesPage: React.FC = () => {
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchParams(prev => {
-        prev.set('search', e.target.value);
-        return prev;
+      prev.set('search', e.target.value);
+      return prev;
     });
   };
 
   const loadMore = useCallback(() => {
     if (isLoadingMore) return;
-    
+
     setIsLoadingMore(true);
     // Simulate a small delay to show the loading indicator
     setTimeout(() => {
@@ -133,28 +140,28 @@ const ServicesPage: React.FC = () => {
           <h1 className="text-3xl font-bold text-gray-900">Tous les Services</h1>
           {user?.role === 'PROVIDER' && (
             <Link
-            to="/create-service"
-            className="rounded bg-blue-600 px-4 py-2 font-bold text-white hover:bg-blue-700"
-          >
+              to="/create-service"
+              className="rounded bg-blue-600 px-4 py-2 font-bold text-white hover:bg-blue-700"
+            >
               Ajouter un service
             </Link>
           )}
         </div>
-        
+
         {/* Search Bar */}
         <div className="relative max-w-md">
-            <input
-                type="text"
-                placeholder="Rechercher un service..."
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 pl-10 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                value={searchTerm}
-                onChange={handleSearchChange}
-            />
-            <div className="absolute left-3 top-3.5 text-gray-400">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-            </div>
+          <input
+            type="text"
+            placeholder="Rechercher un service..."
+            className="w-full rounded-lg border border-gray-300 px-4 py-3 pl-10 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+          <div className="absolute left-3 top-3.5 text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
         </div>
       </div>
 
@@ -169,10 +176,10 @@ const ServicesPage: React.FC = () => {
               <ServiceCard key={service.id} service={service} clientLocation={userLocation} />
             ))}
           </div>
-          
+
           {/* Infinite scroll loader - visible when loading more */}
           {hasMore && (
-            <div 
+            <div
               ref={loaderRef}
               className="mt-8 flex justify-center py-8"
             >
@@ -189,13 +196,13 @@ const ServicesPage: React.FC = () => {
         </>
       ) : (
         <div className="rounded-lg bg-gray-50 py-12 text-center">
-            <p className="text-lg text-gray-600">Aucun service trouvé.</p>
-            <button 
-                onClick={() => setSearchParams({})}
-                className="mt-4 font-semibold text-blue-600 hover:text-blue-800"
-            >
-                Effacer les filtres
-            </button>
+          <p className="text-lg text-gray-600">Aucun service trouvé.</p>
+          <button
+            onClick={() => setSearchParams({})}
+            className="mt-4 font-semibold text-blue-600 hover:text-blue-800"
+          >
+            Effacer les filtres
+          </button>
         </div>
       )}
     </div>

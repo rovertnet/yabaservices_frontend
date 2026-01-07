@@ -29,7 +29,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onDelete, clientLoca
     if (!window.confirm('Êtes-vous sûr de vouloir supprimer ce service ?')) {
       return;
     }
-    
+
     try {
       await servicesApi.deleteService(service.id);
       if (onDelete) {
@@ -50,81 +50,81 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onDelete, clientLoca
       <div className="overflow-hidden rounded-lg bg-white shadow-md transition-shadow hover:shadow-lg">
         {/* Service Image */}
         <div className="h-48 w-full bg-gray-300 object-cover">
-           <img 
-              src={service.imageUrl  ? `http://localhost:3000/${service.imageUrl}` : `https://placehold.co/600x400?text=${encodeURIComponent(service.title)}`} 
-              alt={service.title}
-              className="h-full w-full object-cover"
-           />
+          <img
+            src={service.imageUrl ? `http://localhost:3000/uploads/${service.imageUrl}` : `https://placehold.co/600x400?text=${encodeURIComponent(service.title)}`}
+            alt={service.title}
+            className="h-full w-full object-cover"
+          />
         </div>
         <div className="p-4">
           <div className="mb-2 flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wider text-blue-600">
-                  {service.category?.name || 'Service'}
-              </span>
-              <span className="text-lg font-bold text-gray-900">${service.price}</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-blue-600">
+              {service.category?.name || 'Service'}
+            </span>
+            <span className="text-lg font-bold text-gray-900">${service.price}</span>
           </div>
           <div className="mb-2">
             <StarRating bookingCount={service._count?.bookings || 0} size="sm" />
           </div>
           <h3 className="mb-2 text-xl font-bold text-gray-800">{service.title}</h3>
           <p className="mb-4 text-sm text-gray-600 line-clamp-2">{service.description}</p>
-          
+
           <div className="flex items-center justify-between border-t pt-4">
-              <div className="flex items-center hover:opacity-80 transition-opacity">
-                  <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-600">
-                      {service.provider?.name?.charAt(0) || 'P'}
-                  </div>
-                  <Link 
-                    to={`/providers/${service.provider?.id}`} 
-                    className="ml-2 text-sm text-gray-600 hover:text-blue-600 hover:underline"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {service.provider?.name || 'Provider'}
-                  </Link>
+            <div className="flex items-center hover:opacity-80 transition-opacity">
+              <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-600">
+                {service.provider?.name?.charAt(0) || 'P'}
               </div>
-              {service.distance !== undefined && service.distance !== null && (
-                <div 
-                  className="flex items-center text-xs text-blue-600 cursor-pointer hover:underline hover:text-blue-800 transition-colors"
-                  onClick={() => setIsMapOpen(true)}
-                  title="Voir sur la carte"
+              <Link
+                to={`/providers/${service.provider?.id}`}
+                className="ml-2 text-sm text-gray-600 hover:text-blue-600 hover:underline"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {service.provider?.name || 'Provider'}
+              </Link>
+            </div>
+            {service.distance !== undefined && service.distance !== null && (
+              <div
+                className="flex items-center text-xs text-blue-600 cursor-pointer hover:underline hover:text-blue-800 transition-colors"
+                onClick={() => setIsMapOpen(true)}
+                title="Voir sur la carte"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                à {service.distance} km
+              </div>
+            )}
+            <div className="flex space-x-2">
+              <Link
+                to={`/services/${service.id}`}
+                className="rounded bg-gray-100 px-3 py-2 text-sm font-bold text-gray-700 hover:bg-gray-200"
+              >
+                Détails
+              </Link>
+
+              {/* Show booking button only for clients viewing other providers' services */}
+              {isClient && !isOwnService && (
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="rounded bg-blue-600 px-3 py-2 text-sm font-bold text-white hover:bg-blue-700"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                  à {service.distance} km
-                </div>
+                  Réserver
+                </button>
               )}
-              <div className="flex space-x-2">
-                <Link
-                  to={`/services/${service.id}`}
-                  className="rounded bg-gray-100 px-3 py-2 text-sm font-bold text-gray-700 hover:bg-gray-200"
-                >
-                  Détails
-                </Link>
-                
-                {/* Show booking button only for clients viewing other providers' services */}
-                {isClient && !isOwnService && (
+
+              {/* Show edit/delete buttons for providers viewing their own services */}
+              {isProvider && isOwnService && (
+                <>
                   <button
-                    onClick={() => setIsModalOpen(true)}
-                    className="rounded bg-blue-600 px-3 py-2 text-sm font-bold text-white hover:bg-blue-700"
+                    onClick={handleEdit}
+                    className="rounded bg-blue-600 px-3 py-2 text-sm font-bold text-white hover:bg-green-700"
                   >
-                    Réserver
+                    Modifier
                   </button>
-                )}
-                
-                {/* Show edit/delete buttons for providers viewing their own services */}
-                {isProvider && isOwnService && (
-                  <>
-                    <button
-                      onClick={handleEdit}
-                      className="rounded bg-blue-600 px-3 py-2 text-sm font-bold text-white hover:bg-green-700"
-                    >
-                      Modifier
-                    </button>
-                  </>
-                )}
-              </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>

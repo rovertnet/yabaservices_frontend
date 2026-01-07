@@ -63,7 +63,7 @@ const CreateServicePage: React.FC = () => {
       formDataToSend.append('description', formData.description);
       formDataToSend.append('price', formData.price);
       formDataToSend.append('categoryId', formData.categoryId);
-      
+
       if (imageFile) {
         formDataToSend.append('image', imageFile);
       }
@@ -73,6 +73,15 @@ const CreateServicePage: React.FC = () => {
       navigate('/services');
     } catch (err: any) {
       console.error('Creation error:', err);
+
+      // Check for specific subscription error
+      if (err.response?.data?.code === 'SUBSCRIPTION_REQUIRED' ||
+        err.response?.data?.message?.code === 'SUBSCRIPTION_REQUIRED') {
+        // Redirect to subscription page
+        navigate('/subscription');
+        return;
+      }
+
       setError(err.response?.data?.message || 'Failed to create service');
     } finally {
       setLoading(false);
@@ -83,7 +92,7 @@ const CreateServicePage: React.FC = () => {
   return (
     <div className="mx-auto max-w-2xl p-6">
       <h1 className="mb-6 text-2xl font-bold text-gray-900">Créer un nouveau service</h1>
-      
+
       {error && <div className="mb-4 rounded bg-red-100 p-2 text-red-700">{error}</div>}
 
       <form onSubmit={handleSubmit} className="space-y-6 rounded-lg bg-white p-6 shadow-md">
